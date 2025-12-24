@@ -5,7 +5,7 @@ export const users = mysqlTable("users", {
   id: varchar("id", { length: 36 })
     .primaryKey()
     .default(sql`(uuid())`),
-  cognitoSub: varchar("cognito_sub", { length: 255 }),
+  cognitoSub: varchar("cognito_sub", { length: 255 }).unique(),
   email: varchar("email", { length: 255 }).notNull(),
   username: varchar("username", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
