@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD CONSTRAINT `users_cognito_sub_unique` UNIQUE(`cognito_sub`);
