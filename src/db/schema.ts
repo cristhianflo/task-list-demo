@@ -2,7 +2,7 @@ import { mysqlTable, varchar, timestamp } from "drizzle-orm/mysql-core";
 import { sql } from "drizzle-orm";
 
 export const users = mysqlTable("users", {
-  id: varchar("id")
+  id: varchar("id", { length: 36 })
     .primaryKey()
     .default(sql`(uuid())`),
   cognitoSub: varchar("cognito_sub", { length: 255 }),
