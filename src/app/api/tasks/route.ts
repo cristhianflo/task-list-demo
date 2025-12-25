@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { createTask } from "@/services/taskService";
 import { CreateTaskSchema } from "@/schemas/task";
-import { ZodError } from "zod";
+import { ZodError } from "zod/v3";
 
 export async function POST(req: Request) {
   const session = await auth();
