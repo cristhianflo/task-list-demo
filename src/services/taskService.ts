@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { tasks } from "@/db/schema";
-import { CreateTask, Task, TaskList } from "@/schemas/task";
-import { eq } from "drizzle-orm";
+import { CreateTask, Task, TaskList, UpdateTask } from "@/schemas/task";
+import { and, eq } from "drizzle-orm";
 
 export async function getTasksByUserId(userId: string): Promise<TaskList> {
   const taskList = await db
@@ -39,4 +39,23 @@ export async function createTask(taskData: CreateTask, userId: string): Promise<
     .limit(1);
 
   return newTask;
+}
+
+export async function updateTask(taskId: string, userId: string, data: UpdateTask): Promise<Task | null> {
+  const result = await db
+    .update(tasks)
+    .set(data)
+    .where(and(eq(tasks.id, taskId), eq(tasks.userId, userId)));
+
+  if (result[0].affectedRows === 0) {
+    return null;
+  }
+
+  const [updatedTask] = await db
+    .select()
+    .from(tasks)
+    .where(eq(tasks.id, taskId))
+    .limit(1);
+
+  return updatedTask;
 }
