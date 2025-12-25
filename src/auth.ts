@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Cognito from "next-auth/providers/cognito";
 import { syncUserWithCognito, getUserBySub } from "./services/userService";
+import { NextResponse } from "next/server";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -44,6 +45,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.id = dbUser.id;
 
       return session;
+    },
+    async authorized({ auth, request }) {
+      const loginPage = new URL("/", request.url);
+      const tasksPage = new URL("/tasks", request.url);
+      const protectedRoutes = ["/tasks"];
+
+      const isProtectedRoute = protectedRoutes.some((route) =>
+        request.nextUrl.pathname.startsWith(route),
+      );
+
+      if (auth === null && isProtectedRoute) {
+        return NextResponse.redirect(loginPage);
+      }
+
+      if (!!auth && !isProtectedRoute) {
+        return NextResponse.redirect(tasksPage);
+      }
+
+      return true;
     },
   },
   session: {
