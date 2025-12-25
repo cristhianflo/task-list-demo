@@ -45,7 +45,11 @@ export default async function TasksPage() {
               >
                 <ListItemText
                   primary={task.title}
-                  secondary={task.description ?? "No description"}
+                  secondary={
+                    task.description === ""
+                      ? "No description"
+                      : task.description
+                  }
                 />
               </ListItem>
             ))}
@@ -55,4 +59,3 @@ export default async function TasksPage() {
     </Container>
   );
 }
-
