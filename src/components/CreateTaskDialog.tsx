@@ -8,27 +8,35 @@ import {
   DialogActions,
   TextField,
 } from "@mui/material";
+import { useToast } from "@/components/ToastProvider";
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 export function CreateTaskDialog() {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isPending, startTransition] = useTransition();
+  const { showToast } = useToast();
+  const router = useRouter();
 
   const handleSubmit = () => {
     startTransition(async () => {
-      await fetch("/api/tasks", {
+      const res = await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, description }),
       });
 
-      setOpen(false);
-      setTitle("");
-      setDescription("");
-
-      window.location.reload();
+      if (res.ok) {
+        showToast({ message: "Task created successfully", type: "success" });
+        setOpen(false);
+        setTitle("");
+        setDescription("");
+        router.refresh();
+      } else {
+        showToast({ message: "Failed to create task", type: "error" });
+      }
     });
   };
 
@@ -38,7 +46,12 @@ export function CreateTaskDialog() {
         New Task
       </Button>
 
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        fullWidth
+        maxWidth="sm"
+      >
         <DialogTitle>Create Task</DialogTitle>
 
         <DialogContent className="space-y-4">
@@ -74,4 +87,3 @@ export function CreateTaskDialog() {
     </>
   );
 }
-
