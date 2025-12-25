@@ -16,11 +16,9 @@ export const TaskListSchema = z.array(TaskSchema);
 
 export type TaskList = z.infer<typeof TaskListSchema>;
 
-export const CreateTaskSchema = TaskSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  completedAt: true,
+export const CreateTaskSchema = z.object({
+  title: z.string().min(1).max(255),
+  description: z.string().max(1000).nullable().optional(),
 });
 
 export type CreateTask = z.infer<typeof CreateTaskSchema>;
