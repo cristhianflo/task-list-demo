@@ -29,7 +29,7 @@ export function TaskActions({ task }: Props) {
   const handleEdit = () => {
     startTransition(async () => {
       await fetch(`/api/tasks/${task.id}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, description }),
       });
