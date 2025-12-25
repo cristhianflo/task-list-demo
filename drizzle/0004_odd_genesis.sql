@@ -1,0 +1,1 @@
+ALTER TABLE `tasks` RENAME COLUMN `done_at` TO `completed_at`;

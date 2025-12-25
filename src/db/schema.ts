@@ -22,5 +22,5 @@ export const tasks = mysqlTable("tasks", {
   description: varchar("description", { length: 1024 }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
-  doneAt: timestamp("done_at"),
+  completedAt: timestamp("completed_at"),
 });
