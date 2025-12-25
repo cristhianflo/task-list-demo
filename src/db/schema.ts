@@ -1,5 +1,5 @@
 import { mysqlTable, varchar, timestamp } from "drizzle-orm/mysql-core";
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 
 export const users = mysqlTable("users", {
   id: varchar("id", { length: 36 })
@@ -26,3 +26,10 @@ export const tasks = mysqlTable("tasks", {
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
   completedAt: timestamp("completed_at"),
 });
+
+export const tasksRelations = relations(tasks, ({ one }) => ({
+  user: one(users, {
+    fields: [tasks.userId],
+    references: [users.id],
+  }),
+}));
