@@ -8,6 +8,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientId: process.env.AUTH_COGNITO_ID!,
       clientSecret: process.env.AUTH_COGNITO_SECRET!,
       issuer: process.env.AUTH_COGNITO_ISSUER!,
+      checks:
+        process.env.NODE_ENV === "production" ? ["pkce", "state"] : [],
       profile(profile) {
         return { ...profile };
       },
