@@ -54,35 +54,42 @@ export function CreateTaskDialog() {
       >
         <DialogTitle>Create Task</DialogTitle>
 
-        <DialogContent className="space-y-4">
-          <TextField
-            label="Title"
-            fullWidth
-            required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
+          <DialogContent className="space-y-4">
+            <TextField
+              label="Title"
+              fullWidth
+              required
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
 
-          <TextField
-            label="Description"
-            fullWidth
-            multiline
-            minRows={3}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </DialogContent>
+            <TextField
+              label="Description"
+              fullWidth
+              multiline
+              minRows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </DialogContent>
 
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button
-            variant="contained"
-            onClick={handleSubmit}
-            disabled={!title || isPending}
-          >
-            Create
-          </Button>
-        </DialogActions>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)}>Cancel</Button>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={!title || isPending}
+            >
+              Create
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
     </>
   );
