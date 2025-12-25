@@ -26,7 +26,6 @@ export type CreateTask = z.infer<typeof CreateTaskSchema>;
 export const UpdateTaskSchema = z.object({
   title: z.string().min(1).max(255).optional(),
   description: z.string().max(1000).nullable().optional(),
-  completedAt: z.date().nullable().optional(),
 });
 
 export type UpdateTask = z.infer<typeof UpdateTaskSchema>;
