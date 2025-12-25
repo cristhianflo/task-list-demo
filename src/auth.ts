@@ -1,0 +1,50 @@
+import NextAuth from "next-auth";
+import Cognito from "next-auth/providers/cognito";
+import { syncUserWithCognito, getUserBySub } from "./services/userService";
+
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers: [
+    Cognito({
+      clientId: process.env.AUTH_COGNITO_ID!,
+      clientSecret: process.env.AUTH_COGNITO_SECRET!,
+      issuer: process.env.AUTH_COGNITO_ISSUER!,
+      profile(profile) {
+        return { ...profile };
+      },
+    }),
+  ],
+  callbacks: {
+    async signIn({ user, account, profile }) {
+      if (!account || !profile?.sub) return false;
+
+      try {
+        await syncUserWithCognito(profile.sub, user.email!);
+        return true;
+      } catch (error) {
+        console.error("Failed to sync user:", error);
+        return false;
+      }
+    },
+    jwt({ token, user }) {
+      if (user) {
+        // @ts-ignore
+        token.sub = user.sub;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (!token.sub || !session.user) return session;
+
+      const dbUser = await getUserBySub(token.sub);
+
+      if (dbUser == null) return session;
+
+      session.user.id = dbUser.id;
+
+      return session;
+    },
+  },
+  session: {
+    strategy: "jwt",
+  },
+});
