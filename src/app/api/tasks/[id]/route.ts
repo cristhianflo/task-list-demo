@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { UpdateTaskSchema } from "@/schemas/task";
-import { updateTask } from "@/services/taskService";
+import { deleteTask, updateTask } from "@/services/taskService";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod/v3";
 
@@ -36,7 +36,44 @@ export async function PATCH(
       );
     }
 
-    console.error("Create task failed:", error);
+    console.error("Update task failed:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(
+  req: Request,
+  context: { params: { id: string } | Promise<{ id: string }> },
+) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const params = await context.params;
+  const taskId = params.id;
+
+  try {
+    const deleted = await deleteTask(taskId, session.user.id);
+
+    if (!deleted) {
+      return NextResponse.json({ error: "Task not found" }, { status: 404 });
+    }
+
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        { error: "Invalid request", details: error.flatten() },
+        { status: 400 },
+      );
+    }
+
+    console.error("Delete task failed:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

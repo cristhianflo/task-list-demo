@@ -22,7 +22,10 @@ export async function getTaskById(taskId: string): Promise<TaskList[0] | null> {
   return taskList.length > 0 ? taskList[0] : null;
 }
 
-export async function createTask(taskData: CreateTask, userId: string): Promise<Task> {
+export async function createTask(
+  taskData: CreateTask,
+  userId: string,
+): Promise<Task> {
   const [result] = await db
     .insert(tasks)
     .values({
@@ -41,7 +44,11 @@ export async function createTask(taskData: CreateTask, userId: string): Promise<
   return newTask;
 }
 
-export async function updateTask(taskId: string, userId: string, data: UpdateTask): Promise<Task | null> {
+export async function updateTask(
+  taskId: string,
+  userId: string,
+  data: UpdateTask,
+): Promise<Task | null> {
   const result = await db
     .update(tasks)
     .set(data)
@@ -58,4 +65,15 @@ export async function updateTask(taskId: string, userId: string, data: UpdateTas
     .limit(1);
 
   return updatedTask;
+}
+
+export async function deleteTask(
+  taskId: string,
+  userId: string,
+): Promise<boolean> {
+  const result = await db
+    .delete(tasks)
+    .where(and(eq(tasks.id, taskId), eq(tasks.userId, userId)));
+
+  return result[0].affectedRows > 0;
 }
