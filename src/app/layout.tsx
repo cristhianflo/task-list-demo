@@ -4,6 +4,7 @@ import "./globals.css";
 import { Roboto } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
+import { ToastProvider } from "@/components/ToastProvider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -26,7 +27,9 @@ export default async function RootLayout({
     <html lang="en" className={roboto.variable}>
       <body className="antialiased">
         <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+          <ThemeProvider theme={theme}>
+            <ToastProvider>{children}</ToastProvider>
+          </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
