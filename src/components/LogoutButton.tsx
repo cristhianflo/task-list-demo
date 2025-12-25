@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 
 export default function LogoutButton() {
   const handleSignOut = async () => {
-    "use server"
+    "use server";
     await signOut();
   };
 
