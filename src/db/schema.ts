@@ -4,7 +4,8 @@ import { sql } from "drizzle-orm";
 export const users = mysqlTable("users", {
   id: varchar("id", { length: 36 })
     .primaryKey()
-    .default(sql`(uuid())`),
+    .default(sql`(uuid())`)
+    .$defaultFn(() => crypto.randomUUID()),
   cognitoSub: varchar("cognito_sub", { length: 255 }).unique(),
   email: varchar("email", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -14,7 +15,8 @@ export const users = mysqlTable("users", {
 export const tasks = mysqlTable("tasks", {
   id: varchar("id", { length: 36 })
     .primaryKey()
-    .default(sql`(uuid())`),
+    .default(sql`(uuid())`)
+    .$defaultFn(() => crypto.randomUUID()),
   userId: varchar("user_id", { length: 36 })
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
