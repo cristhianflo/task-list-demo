@@ -12,16 +12,6 @@ export async function getTasksByUserId(userId: string): Promise<TaskList> {
   return taskList;
 }
 
-export async function getTaskById(taskId: string): Promise<TaskList[0] | null> {
-  const taskList = await db
-    .select()
-    .from(tasks)
-    .where(eq(tasks.id, taskId))
-    .limit(1);
-
-  return taskList.length > 0 ? taskList[0] : null;
-}
-
 export async function createTask(
   taskData: CreateTask,
   userId: string,
