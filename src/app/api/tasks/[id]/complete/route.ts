@@ -22,8 +22,6 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // 2. Validate Params
-  // Await params if you are on Next.js 15 (optional but good practice)
   const params = await context.params;
   const taskId = params.id;
   const validation = CompleteTaskParamsSchema.safeParse({ taskId });
@@ -38,7 +36,7 @@ export async function POST(
       FunctionName: process.env.AWS_LAMBDA_FUNCTION_NAME,
       InvocationType: "Event",
       Payload: JSON.stringify({
-        id: taskId,
+        taskId: taskId,
         userId: session.user.id,
       }),
     });
