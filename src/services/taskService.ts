@@ -77,3 +77,10 @@ export async function deleteTask(
 
   return result[0].affectedRows > 0;
 }
+
+export async function setTaskPending(taskId: string, userId: string) {
+  await db
+    .update(tasks)
+    .set({ status: "PENDING" })
+    .where(and(eq(tasks.id, taskId), eq(tasks.userId, userId)));
+}

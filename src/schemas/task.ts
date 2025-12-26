@@ -31,3 +31,8 @@ export const UpdateTaskSchema = z.object({
 });
 
 export type UpdateTask = z.infer<typeof UpdateTaskSchema>;
+
+// Schema for the API Request (Client -> Next.js)
+export const CompleteTaskParamsSchema = z.object({
+  taskId: z.string().uuid(),
+});
