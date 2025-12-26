@@ -1,19 +1,23 @@
 describe("Authentication Flow (AWS Cognito)", () => {
   beforeEach(() => {
-    cy.task("getCognitoCredentials").then(({ username, password }) => {
+    cy.task<{ username: string; password: string }>(
+      "getCognitoCredentials",
+    ).then(({ username, password }) => {
       cy.loginByCognito(username, password);
     });
   });
 
   it("Shows tasks page", () => {
     cy.visit("/tasks");
-    cy.contains("Logged In!").should("be.visible");
+    cy.contains("Logged in").should("be.visible");
   });
 });
 
 describe("Logout Flow", () => {
   beforeEach(() => {
-    cy.task("getCognitoCredentials").then(({ username, password }) => {
+    cy.task<{ username: string; password: string }>(
+      "getCognitoCredentials",
+    ).then(({ username, password }) => {
       cy.loginByCognito(username, password);
     });
   });

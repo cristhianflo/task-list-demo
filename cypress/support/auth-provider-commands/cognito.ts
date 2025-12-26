@@ -30,7 +30,7 @@ Cypress.Commands.add("loginByCognito", (username: string, password: string) => {
     {
       validate() {
         cy.visit("/tasks");
-        cy.contains("Logged In!").should("be.visible");
+        cy.contains("Logged in").should("be.visible");
       },
     },
   );
