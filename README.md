@@ -51,11 +51,11 @@ Cypress documentation was delightful and writing E2E tests with it feel natural 
 
 To get the app running locally:
 
-Clone the repository: `git clone https://github.com/cristhianflo/task-list-demo.git`
-Install dependencies: `npm install` (or `yarn install`, `pnpm install`, `bun install`)
-Copy `.env.example` to `.env` and fill in the required variables (see Environment Variables section).
-Run the development server: `npm run dev` (or equivalent with yarn/pnpm/bun)
-Open `http://localhost:3000` in your browser.
+1. Clone the repository: `git clone https://github.com/cristhianflo/task-list-demo.git`
+2. Install dependencies: `npm install` (or `yarn install`, `pnpm install`, `bun install`)
+3. Copy `.env.example` to `.env` and fill in the required variables (see Environment Variables section).
+4. Run the development server: `npm run dev` (or equivalent with yarn/pnpm/bun)
+5. Open `http://localhost:3000` in your browser.
 
 The app will hot-reload on changes. For database setup, run migrations using Drizzle commands as configured in drizzle.config.ts
 
