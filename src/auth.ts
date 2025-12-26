@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthConfig } from "next-auth";
 import Cognito from "next-auth/providers/cognito";
 import { syncUserWithCognito, getUserBySub } from "./services/userService";
 import { NextResponse } from "next/server";
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const authConfig: NextAuthConfig = {
   providers: [
     Cognito({
       clientId: process.env.AUTH_COGNITO_ID!,
@@ -69,4 +69,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: "jwt",
   },
-});
+}
+
+export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);
