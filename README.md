@@ -99,4 +99,5 @@ This ensures the app's reliability across components, APIs, and user journeys.
 
 ## Video
 
-Coming soon!
+https://github.com/user-attachments/assets/c2c0f185-3f53-40e3-959e-10c64468017f
+
