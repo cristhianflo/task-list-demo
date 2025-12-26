@@ -9,9 +9,12 @@ import {
   Button,
   TextField,
   Stack,
+  Tooltip,
+  CircularProgress,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"; // New Icon
 import { useState, useTransition } from "react";
 import { Task } from "@/schemas/task";
 import { useRouter } from "next/navigation";
@@ -29,6 +32,35 @@ export function TaskActions({ task }: Props) {
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
   const router = useRouter();
+
+  const isProcessing = task.status === "PENDING" || isPending;
+  const isDone = task.status === "DONE";
+
+  const handleMarkAsDone = () => {
+    startTransition(async () => {
+      try {
+        const res = await fetch(`/api/tasks/${task.id}/complete`, {
+          method: "POST",
+        });
+
+        if (res.ok) {
+          showToast({
+            message: "Task is being processed by cloud worker...",
+            type: "success",
+          });
+          router.refresh();
+        } else {
+          const errorData = await res.json();
+          showToast({
+            message: errorData.error || "Failed to trigger completion",
+            type: "error",
+          });
+        }
+      } catch (err) {
+        showToast({ message: "Network error occurred", type: "error" });
+      }
+    });
+  };
 
   const handleEdit = () => {
     startTransition(async () => {
@@ -66,11 +98,34 @@ export function TaskActions({ task }: Props) {
 
   return (
     <>
-      <Stack direction="row" spacing={1}>
+      <Stack direction="row" spacing={1} alignItems="center">
+        <Tooltip title={isDone ? "Completed" : "Mark as Done"}>
+          <span>
+            {" "}
+            <IconButton
+              aria-label="Complete task"
+              size="small"
+              color="success"
+              onClick={handleMarkAsDone}
+              disabled={isProcessing || isDone}
+            >
+              {isProcessing ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                <CheckCircleIcon
+                  fontSize="small"
+                  color={isDone ? "success" : "disabled"}
+                />
+              )}
+            </IconButton>
+          </span>
+        </Tooltip>
+
         <IconButton
           aria-label="Edit task"
           size="small"
           onClick={() => setEditOpen(true)}
+          disabled={isProcessing}
         >
           <EditIcon fontSize="small" />
         </IconButton>
@@ -79,12 +134,12 @@ export function TaskActions({ task }: Props) {
           aria-label="Delete task"
           size="small"
           onClick={() => setDeleteOpen(true)}
+          disabled={isProcessing}
         >
           <DeleteIcon fontSize="small" />
         </IconButton>
       </Stack>
 
-      {/* Edit Dialog */}
       <Dialog open={editOpen} onClose={() => setEditOpen(false)} fullWidth>
         <DialogTitle>Edit Task</DialogTitle>
         <form
@@ -125,14 +180,11 @@ export function TaskActions({ task }: Props) {
         </form>
       </Dialog>
 
-      {/* Delete Dialog */}
       <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
         <DialogTitle>Delete Task</DialogTitle>
-
         <DialogContent>
           Are you sure you want to delete this task?
         </DialogContent>
-
         <DialogActions>
           <Button onClick={() => setDeleteOpen(false)}>Cancel</Button>
           <Button
