@@ -33,7 +33,7 @@ export async function POST(
     await setTaskPending(taskId, session.user.id);
 
     const command = new InvokeCommand({
-      FunctionName: process.env.AWS_LAMBDA_FUNCTION_NAME,
+      FunctionName: process.env.AWS_LAMBDA_COMPLETE_TASK,
       InvocationType: "Event",
       Payload: JSON.stringify({
         taskId: taskId,
